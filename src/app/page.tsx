@@ -2,7 +2,6 @@
 
 import Input from "@/components/Input";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Inputs, registerSchema } from "@/models/RegisterSchema";
 
