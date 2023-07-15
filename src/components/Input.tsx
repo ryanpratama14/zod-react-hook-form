@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { FieldError, UseFormRegister } from "react-hook-form";
 
 type Props = {
@@ -6,7 +7,6 @@ type Props = {
   error?: FieldError;
   type: React.HTMLInputTypeAttribute;
   label: string;
-  required?: boolean;
 };
 
 export default function Input({
@@ -14,25 +14,17 @@ export default function Input({
   error,
   type,
   label,
-  required = false,
   register,
 }: Props): React.JSX.Element {
+  const id = useId();
+
   return (
     <section className="flex flex-col">
-      <label htmlFor={name} className="ml-1">
+      <label htmlFor={id} className="ml-1">
         {label}
       </label>
-      <input
-        {...register(name, { required: required })}
-        id={name}
-        name={name}
-        type={type}
-      />
-      {error ? (
-        <small className="text-red-500">
-          {label} field is required {error.message}
-        </small>
-      ) : null}
+      <input {...register(name)} id={id} name={name} type={type} />
+      {error ? <small className="text-red-500">{error.message}</small> : null}
     </section>
   );
 }

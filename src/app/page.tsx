@@ -2,13 +2,28 @@
 
 import Input from "@/components/Input";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const registerSchema = z.object({
+  email: z.string().email("Invalid email"),
+  password: z.string().min(8, "Too short").max(50, "Too long"),
+  date: z.string(),
+  agreed: z.boolean().refine((value) => value === true, {
+    message: "You must agree to the terms and conditions",
+  }),
+});
+
+type Inputs = z.infer<typeof registerSchema>;
 
 export default function Home(): React.JSX.Element {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<Inputs>({
+    resolver: zodResolver(registerSchema),
+  });
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
@@ -24,7 +39,6 @@ export default function Home(): React.JSX.Element {
           label="Email"
           type="email"
           name="email"
-          required
           register={register}
           error={errors.email}
         />
@@ -32,7 +46,6 @@ export default function Home(): React.JSX.Element {
           label="Password"
           type="password"
           name="password"
-          required
           register={register}
           error={errors.password}
         />
@@ -40,7 +53,6 @@ export default function Home(): React.JSX.Element {
           label="Date"
           type="date"
           name="date"
-          required
           register={register}
           error={errors.date}
         />
@@ -48,7 +60,6 @@ export default function Home(): React.JSX.Element {
           label="I agree on terms"
           type="checkbox"
           name="agreed"
-          required
           register={register}
           error={errors.agreed}
         />
